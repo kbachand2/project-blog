@@ -8,14 +8,12 @@ const {
   counter
 } = require('./data.js');
 
-//understand everything above this line
-
 async function seedHits(client) {
     try {
         //create the "hits" table if it doesnt exist
         const createTable = await client.sql`
         CREATE TABLE IF NOT EXISTS hits (
-        slug varchar(100),
+        slug varchar(100) NOT NULL UNIQUE,
         hits int
         );
         `;
@@ -27,15 +25,18 @@ async function seedHits(client) {
 
     const insertedData = await client.sql`
         INSERT INTO hits (slug, hits)
-        VALUES (${slugs[0].slug}, ${counter[0].hits});
+        VALUES (${slugs[0].slug}, ${counter[0].hits})
+        ON CONFLICT (slug) DO NOTHING;
         `;
   
       console.log(`Seeded initial hit`);
   
-      return {
+    return {
         createTable,
         hits: insertedData,
-      };
+    };
+
+      //UPDATE hits SET hits = (SELECT hits FROM hits WHERE slug = ${slug}) + 1 WHERE slug = ${slug};
 
     //Remove when done
     } catch (error) {
