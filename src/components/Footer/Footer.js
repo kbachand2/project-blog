@@ -17,9 +17,9 @@ const databaseAbsolutePath = path.join(process.cwd(), databasePath);
 //TODO: access json file and log to the console
 console.log(databaseAbsolutePath);
 
-const readFileFunction = fs.readFileSync(databaseAbsolutePath, 'utf8');
+// const readFileFunction = fs.readFileSync(databaseAbsolutePath, 'utf8');
 
-console.log(JSON.parse(readFileFunction));
+// console.log(JSON.parse(readFileFunction));
 
 function Footer() {
 
