@@ -6,8 +6,10 @@ import styles from './postSlug.module.css';
 import { loadBlogPost } from '@/helpers/file-helpers';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
-import { BLOG_TITLE } from '@/constants';
+import { BLOG_TITLE, PAGE_VISITS } from '@/constants';
 import COMPONENT_MAP from '@/helpers/mdx-components';
+import { incrementHits } from '@/db/queries';
+import IncrementHits from '@/app/sql-function';
 
 export async function generateMetadata({ params }) {
   const { frontmatter } = await loadBlogPost(params.postSlug);
@@ -24,16 +26,18 @@ async function BlogPost({ params }){
       <BlogHero
         title={frontmatter.title}
         publishedOn={frontmatter.publishedOn}
-        />
+      />
       <div className={styles.page}>
       <MDXRemote 
         source ={content}
         components={COMPONENT_MAP}
         />
       </div>
+      <IncrementHits slug={params.postSlug}/>
     </article>
   );
 }
+
 
 
 export default BlogPost;
